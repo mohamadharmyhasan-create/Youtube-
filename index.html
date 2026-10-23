@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="ms" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="doc-title">Sayangi Islam Kita - Portal Ceramah Eksklusif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        islamic: {
+                            900: '#070D16',
+                            800: '#0B132B',
+                            700: '#111B3C',
+                            600: '#1D2A54',
+                            gold: '#F59E0B',
+                            goldLight: '#FBBF24',
+                            emerald: '#059669',
+                            emeraldDark: '#047857'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .glass-panel {
+            background: rgba(17, 27, 60, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
+        .glow-gold {
+            box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.3);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 25px -5px rgba(5, 150, 105, 0.3);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070D16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1D2A54;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #059669;
+        }
+        #fireworks-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body class="bg-islamic-900 text-slate-100 font-sans antialiased selection:bg-islamic-gold selection:text-islamic-900 min-h-screen flex flex-col justify-between">
+
+    <canvas id="fireworks-canvas" class="hidden"></canvas>
+
+    <!-- Header / Navigasi -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-islamic-600/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
+                <div id="site-logo-container" class="w-10 h-10 rounded-xl bg-gradient-to-br from-islamic-gold to-amber-600 flex items-center justify-center glow-gold overflow-hidden">
+                    <i id="site-logo-icon" class="fa-solid fa-kaaba text-islamic-900 text-lg"></i>
+                    <img id="site-logo-img" src="" alt="Logo" class="w-full h-full object-cover hidden">
+                </div>
+                <div>
+                    <h1 id="ui-header-title" class="font-bold text-lg sm:text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-islamic-gold bg-clip-text text-transparent">Sayangi Islam Kita</h1>
+                    <p id="ui-header-subtitle" class="text-xs text-islamic-gold tracking-widest uppercase font-medium">Koleksi Ceramah Eksklusif</p>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <button onclick="scrollToSection('hero')" class="text-slate-300 hover:text-islamic-gold transition">Utama</button>
+                <button onclick="scrollToSection('collection')" class="text-slate-300 hover:text-islamic-gold transition">Koleksi Video</button>
+                <button onclick="scrollToSection('pricing')" class="text-slate-300 hover:text-islamic-gold transition">Langganan</button>
+                <button onclick="scrollToSection('faq')" class="text-slate-300 hover:text-islamic-gold transition">Soalan Lazim</button>
+                <button onclick="openAdminAuthModal()" class="text-slate-300 hover:text-islamic-gold transition flex items-center space-x-1">
+                    <i class="fa-solid fa-user-shield text-xs"></i>
+                    <span>Portal Admin</span>
+                </button>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <div id="user-status-badge" class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-islamic-emerald/20 border border-islamic-emerald/40 text-islamic-emerald text-xs font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-islamic-emerald animate-pulse"></span>
+                    <span id="status-text">Akaun Percuma</span>
+                </div>
+                <button id="phone-login-nav-btn" onclick="openPhoneAuthModal()" class="glass-panel border-islamic-gold/40 text-islamic-gold font-semibold px-4 py-2 rounded-xl text-sm hover:bg-islamic-gold/10 transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-id-card text-xs"></i>
+                    <span id="phone-login-btn-text">Log Masuk Nombor ID</span>
+                </button>
+                <button onclick="openPricingModal()" class="bg-gradient-to-r from-islamic-gold to-amber-500 text-islamic-900 font-semibold px-4 py-2 rounded-xl text-sm shadow-lg hover:glow-gold transition transform hover:-translate-y-0.5">
+                    Langgan Sekarang
+                </button>
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white p-2">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-b border-islamic-600/40 px-4 pt-2 pb-6 space-y-3">
+            <button onclick="scrollToSection('hero'); toggleMobileMenu();" class="block w-full text-left py-2 text-slate-300 hover:text-islamic-gold">Utama</button>
+            <button onclick="scrollToSection('collection'); toggleMobileMenu();" class="block w-full text-left py-2 text-slate-300 hover:text-islamic-gold">Koleksi Video</button>
+            <button onclick="scrollToSection('pricing'); toggleMobileMenu();" class="block w-full text-left py-2 text-slate-300 hover:text-islamic-gold">Langganan</button>
+            <button onclick="scrollToSection('faq'); toggleMobileMenu();" class="block w-full text-left py-2 text-slate-300 hover:text-islamic-gold">Soalan Lazim</button>
+            <button onclick="openPhoneAuthModal(); toggleMobileMenu();" class="block w-full text-left py-2 text-amber-400 font-semibold border-t border-islamic-600/30 pt-3">
+                <i class="fa-solid fa-id-card mr-2"></i>Log Masuk Nombor ID
+            </button>
+            <button onclick="openAdminAuthModal(); toggleMobileMenu();" class="block w-full text-left py-2 text-islamic-gold font-semibold">
+                <i class="fa-solid fa-user-shield mr-2"></i>Portal Admin
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section id="hero" class="relative overflow-hidden py-20 lg:py-32">
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-islamic-emerald/15 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute top-1/3 left-1/4 w-[350px] h-[350px] bg-islamic-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-3xl mx-auto space-y-6">
+                    <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full glass-panel border-islamic-gold/30 text-islamic-gold text-xs sm:text-sm font-medium tracking-wide">
+                        <i class="fa-solid fa-moon text-amber-400"></i>
+                        <span id="ui-hero-tagline">Edisi Khas Rohani 2026 • Sayangi Islam Kita Sepenuh Hati</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                        <span id="ui-hero-headline1">Perkukuh Iman,</span> <br>
+                        <span id="ui-hero-headline2" class="bg-gradient-to-r from-islamic-gold via-amber-400 to-amber-200 bg-clip-text text-transparent">Hayati Islam Sepenuh Hati</span>
+                    </h1>
+
+                    <p id="ui-hero-description" class="text-base sm:text-lg text-slate-300 leading-relaxed">
+                        Terokai koleksi ceramah agama eksklusif daripada asatizah terkemuka. Kupasan mendalam tentang akidah, akhlak, sirah, dan pembersihan jiwa untuk membina keluarga & peribadi Muslim sejati.
+                    </p>
+
+                    <div id="hero-phone-login-card" class="glass-panel p-6 rounded-3xl border border-islamic-gold/40 max-w-md mx-auto space-y-3 shadow-2xl my-6">
+                        <div class="flex items-center justify-center space-x-2 text-islamic-gold text-sm font-bold">
+                            <i class="fa-solid fa-id-card"></i>
+                            <span>Pengesahan Ahli / Log Masuk Segera</span>
+                        </div>
+                        <p class="text-xs text-slate-300">Masukkan <strong>Nombor ID Ahli</strong> anda di ruang utama untuk mula menonton ceramah:</p>
+                        <form onsubmit="handleMemberIdAuthSubmit(event)" class="space-y-3">
+                            <div class="flex rounded-xl overflow-hidden border border-islamic-600/60 bg-islamic-900 focus-within:border-islamic-gold">
+                                <span class="bg-islamic-800 text-slate-300 px-3 py-2.5 text-xs font-semibold flex items-center border-r border-islamic-600/40">ID AHLI</span>
+                                <input type="text" id="hero-member-id-input" required placeholder="Contoh: SIK-123456" class="w-full bg-transparent px-3 py-2.5 text-sm text-white focus:outline-none uppercase tracking-wider font-mono">
+                            </div>
+                            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-islamic-gold to-amber-500 text-islamic-900 font-bold text-sm shadow hover:glow-gold transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                <span>Sahkan ID & Mula Menonton</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="hero-user-logged-banner" class="hidden glass-panel p-5 rounded-2xl border border-emerald-500/40 bg-emerald-950/30 max-w-md mx-auto space-y-3">
+                        <div class="text-xs text-emerald-400 font-bold flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-base"></i>
+                            <span>Log Masuk Berjaya! ID Ahli: <span id="logged-id-display" class="font-mono text-white underline"></span></span>
+                        </div>
+                        <div id="user-sub-countdown-box" class="p-3 bg-islamic-900/90 rounded-xl border border-islamic-gold/30 text-xs text-slate-200 space-y-1">
+                            <div class="flex justify-between items-center font-semibold">
+                                <span class="text-slate-400">Status Langganan:</span>
+                                <span id="user-sub-status-lbl" class="text-amber-400 uppercase font-bold">Menunggu Kelulusan</span>
+                            </div>
+                            <div class="flex justify-between items-center font-mono">
+                                <span class="text-slate-400 text-[11px]">Masa Berbaki:</span>
+                                <span id="user-countdown-display" class="text-islamic-gold font-bold text-sm">--d --h --m --s</span>
+                            </div>
+                        </div>
+                        <button onclick="userLogout()" class="text-[11px] text-slate-400 hover:text-red-400 underline">Log Keluar Akaun</button>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                        <button onclick="scrollToSection('collection')" class="w-full sm:w-auto bg-gradient-to-r from-islamic-emerald to-emerald-600 text-white font-semibold px-8 py-4 rounded-2xl shadow-lg glow-emerald hover:opacity-95 transition transform hover:-translate-y-0.5 flex items-center justify-center space-x-3">
+                            <i class="fa-solid fa-play"></i>
+                            <span>Mula Teroka Ceramah</span>
+                        </button>
+                        <button onclick="scrollToSection('pricing')" class="w-full sm:w-auto glass-panel border-islamic-gold/40 text-islamic-gold font-semibold px-8 py-4 rounded-2xl hover:bg-islamic-gold/10 transition flex items-center justify-center space-x-3">
+                            <i class="fa-solid fa-crown"></i>
+                            <span>Langganan VIP (RM5/bulan)</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 pt-12 border-t border-slate-800/80 max-w-2xl mx-auto text-center">
+                        <div>
+                            <p class="text-2xl sm:text-3xl font-bold text-white">50+</p>
+                            <p class="text-xs sm:text-sm text-slate-400">Siri Ceramah Pilihan</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl sm:text-3xl font-bold text-islamic-gold">HD</p>
+                            <p class="text-xs sm:text-sm text-slate-400">Kualiti Tayangan</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl sm:text-3xl font-bold text-emerald-400">100%</p>
+                            <p class="text-xs sm:text-sm text-slate-400">Ilmu Bermanfaat</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Koleksi Video Section -->
+        <section id="collection" class="py-16 bg-islamic-800/40 border-t border-islamic-600/20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h2 id="ui-collection-title" class="text-2xl sm:text-3xl font-bold text-white">Koleksi Ceramah Pilihan</h2>
+                        <p id="ui-collection-subtitle" class="text-slate-400 text-sm mt-1">Tonton siri kuliah penuh pengajaran dan panduan hidup berlandaskan Al-Quran & Sunnah.</p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="relative">
+                            <i class="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                            <input type="text" id="search-input" onkeyup="filterVideos()" placeholder="Cari tajuk atau penceramah..." class="bg-islamic-900 border border-islamic-600/50 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-islamic-gold w-full sm:w-64">
+                        </div>
+                        <div class="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-0">
+                            <button onclick="filterCategory('all')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-islamic-gold text-islamic-900 whitespace-nowrap transition">Semua</button>
+                            <button onclick="filterCategory('akidah')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-islamic-900 text-slate-300 border border-islamic-600/50 whitespace-nowrap hover:border-islamic-gold transition">Akidah</button>
+                            <button onclick="filterCategory('akhlak')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-islamic-900 text-slate-300 border border-islamic-600/50 whitespace-nowrap hover:border-islamic-gold transition">Akhlak & Hati</button>
+                            <button onclick="filterCategory('keluarga')" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-islamic-900 text-slate-300 border border-islamic-600/50 whitespace-nowrap hover:border-islamic-gold transition">Keluarga</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- Pelan Langganan -->
+        <section id="pricing" class="py-20 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-islamic-600/10 to-transparent pointer-events-none"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <span class="text-islamic-gold text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full glass-panel border-islamic-gold/30">Pelan Langganan Eksklusif</span>
+                    <h2 id="ui-pricing-title" class="text-3xl sm:text-4xl font-extrabold text-white">Sokong Dakwah & Akses Tanpa Had</h2>
+                    <p id="ui-pricing-subtitle" class="text-slate-300 text-sm sm:text-base">Nikmati kesemua video premium tanpa iklan, muat turun nota ceramah, dan sokong kesinambungan platform dakwah ini.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="glass-panel p-8 rounded-3xl border border-islamic-600/40 flex flex-col justify-between relative group hover:border-islamic-gold/60 transition">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xl font-bold text-white">Pelan Bulanan</h3>
+                                <span class="px-3 py-1 bg-islamic-600/30 text-islamic-gold text-xs rounded-full font-medium">Fleksibel</span>
+                            </div>
+                            <p class="text-slate-400 text-sm mt-2">Sesuai untuk langganan fleksibel bulan ke bulan.</p>
+                            <div class="my-6">
+                                <span class="text-4xl sm:text-5xl font-extrabold text-white">RM 5.00</span>
+                                <span class="text-slate-400 text-sm"> / bulan</span>
+                            </div>
+                            <ul class="space-y-3 text-sm text-slate-300">
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-islamic-gold"></i><span>Akses penuh semua video eksklusif</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-islamic-gold"></i><span>Nota ceramah PDF percuma</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-islamic-gold"></i><span>Batal bila-bila masa</span></li>
+                            </ul>
+                        </div>
+                        <button onclick="subscribePlan('monthly', 5)" class="mt-8 w-full bg-islamic-600 hover:bg-islamic-600/80 text-white font-semibold py-3.5 rounded-2xl transition border border-islamic-gold/30 hover:border-islamic-gold">
+                            Langgan RM 5.00 / Bulan
+                        </button>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-3xl border-2 border-islamic-gold/80 flex flex-col justify-between relative glow-gold bg-gradient-to-b from-islamic-700/60 to-islamic-900/80">
+                        <div class="absolute -top-3.5 right-6 bg-gradient-to-r from-islamic-gold to-amber-500 text-islamic-900 text-xs font-bold px-3 py-1 rounded-full shadow">
+                            JIMAT & TERBAIK ⭐
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xl font-bold text-white">Pelan Tahunan</h3>
+                                <span class="px-3 py-1 bg-amber-500/20 text-amber-400 text-xs rounded-full font-medium">Jimat RM10</span>
+                            </div>
+                            <p class="text-slate-300 text-sm mt-2">Akses setahun penuh tanpa gangguan ibadah.</p>
+                            <div class="my-6">
+                                <span class="text-4xl sm:text-5xl font-extrabold text-islamic-gold">RM 50.00</span>
+                                <span class="text-slate-400 text-sm"> / tahun</span>
+                            </div>
+                            <ul class="space-y-3 text-sm text-slate-200">
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-islamic-gold"></i><span>Semua keistimewaan pelan bulanan</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-islamic-gold"></i><span>Sesi Soal Jawab khas bersama Asatizah</span></li>
+                                <li class="flex items-center space-x-3"><i class="fa-solid fa-check text-islamic-gold"></i><span>Sumbangan dana dakwah berterusan</span></li>
+                            </ul>
+                        </div>
+                        <button onclick="subscribePlan('yearly', 50)" class="mt-8 w-full bg-gradient-to-r from-islamic-gold to-amber-500 hover:from-amber-400 hover:to-amber-600 text-islamic-900 font-bold py-3.5 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5">
+                            Langgan RM 50.00 / Tahun
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-16 bg-islamic-800/30 border-t border-islamic-600/20">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">Soalan Lazim (FAQ)</h2>
+                    <p class="text-slate-400 text-sm">Sebarang persoalan mengenai langganan dan akses portal.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="glass-panel rounded-2xl p-6 border border-islamic-600/30">
+                        <h3 class="font-semibold text-white flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                            <span>Bagaimanakah cara pembayaran langganan dilakukan?</span>
+                            <i class="fa-solid fa-chevron-down text-islamic-gold transition-transform"></i>
+                        </h3>
+                        <p class="text-slate-300 text-sm mt-3 hidden">Pembayaran disahkan secara automatik melalui WhatsApp hotline selepas menghantar butiran langganan anda.</p>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 border border-islamic-600/30">
+                        <h3 class="font-semibold text-white flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                            <span>Adakah saya boleh membatalkan langganan bulanan pada bila-bila masa?</span>
+                            <i class="fa-solid fa-chevron-down text-islamic-gold transition-transform"></i>
+                        </h3>
+                        <p class="text-slate-300 text-sm mt-3 hidden">Ya, anda boleh menghentikan langganan bulanan anda dengan mudah melalui tetapan akaun tanpa sebarang caj tersembunyi.</p>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 border border-islamic-600/30">
+                        <h3 class="font-semibold text-white flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                            <span>Adakah video ceramah ini boleh dimuat turun?</span>
+                            <i class="fa-solid fa-chevron-down text-islamic-gold transition-transform"></i>
+                        </h3>
+                        <p class="text-slate-300 text-sm mt-3 hidden">Video boleh ditonton secara penstriman HD pada bila-bila masa. Nota ringkas ceramah dalam bentuk PDF disediakan untuk dimuat turun.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-islamic-600/40 py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div class="space-y-2">
+                <div class="flex items-center justify-center md:justify-start space-x-3">
+                    <div id="footer-logo-container" class="w-8 h-8 rounded-lg bg-islamic-gold flex items-center justify-center overflow-hidden">
+                        <i id="footer-logo-icon" class="fa-solid fa-kaaba text-islamic-900 text-sm"></i>
+                        <img id="footer-logo-img" src="" alt="Logo" class="w-full h-full object-cover hidden">
+                    </div>
+                    <span id="ui-footer-title" class="font-bold text-white">Sayangi Islam Kita Sepenuh Hati</span>
+                </div>
+                <p id="ui-footer-subtitle" class="text-xs text-slate-400">Portal ceramah agama interaktif • Menyebar ilmu kebaikan sejagat.</p>
+            </div>
+            <div class="flex flex-col md:flex-row items-center gap-4">
+                <button onclick="openAdminAuthModal()" class="text-xs text-slate-400 hover:text-islamic-gold transition flex items-center gap-1">
+                    <i class="fa-solid fa-lock text-[10px]"></i> Log Masuk Admin
+                </button>
+                <p class="text-xs text-slate-500">© 2026 Hak Cipta Terpelihara. Dibangunkan untuk umat Islam.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL LOG MASUK NOMBOR ID AHLI -->
+    <div id="phone-auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl max-w-md w-full border border-islamic-gold/40 relative shadow-2xl">
+            <button onclick="closePhoneAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center space-y-2 mb-6">
+                <div class="w-12 h-12 bg-islamic-gold/20 rounded-2xl border border-islamic-gold/40 flex items-center justify-center mx-auto text-islamic-gold text-xl">
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Log Masuk ID Ahli</h3>
+                <p class="text-xs text-slate-300">Masukkan Nombor ID Ahli berdaftar anda untuk pengesahan sistem.</p>
+            </div>
+
+            <form onsubmit="handleMemberIdAuthSubmitModal(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Nombor ID Ahli VIP</label>
+                    <div class="flex rounded-xl overflow-hidden border border-islamic-600/60 bg-islamic-900 focus-within:border-islamic-gold">
+                        <span class="bg-islamic-800 text-slate-300 px-3 py-2.5 text-xs font-semibold flex items-center border-r border-islamic-600/40">ID AHLI</span>
+                        <input type="text" id="modal-member-id-input" required placeholder="Contoh: SIK-123456" class="w-full bg-transparent px-3 py-2.5 text-sm text-white focus:outline-none uppercase font-mono tracking-wider">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-islamic-gold to-amber-500 text-islamic-900 font-bold rounded-xl shadow-lg hover:glow-gold transition text-sm">
+                    Sahkan ID & Log Masuk
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL VIDEO PLAYER -->
+    <div id="video-player-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden">
+        <div class="glass-panel rounded-3xl max-w-4xl w-full border border-islamic-gold/30 overflow-hidden shadow-2xl relative flex flex-col max-h-[92vh]">
+            <div class="flex items-center justify-between p-4 border-b border-islamic-600/40 bg-islamic-800/80">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                    <h3 id="modal-video-title" class="text-sm sm:text-base font-bold text-white truncate max-w-xs sm:max-w-md">Tajuk Video Ceramah</h3>
+                </div>
+                <button onclick="closeVideoPlayerModal()" class="text-slate-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="relative w-full bg-black aspect-video">
+                <iframe id="video-iframe" class="w-full h-full" src="" title="Video Ceramah" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <div class="p-4 sm:p-6 space-y-3 overflow-y-auto bg-islamic-900/90 text-xs sm:text-sm">
+                <div class="flex items-center justify-between text-slate-400 border-b border-islamic-600/30 pb-3">
+                    <span id="modal-video-speaker" class="text-islamic-gold font-semibold"><i class="fa-solid fa-user-tie mr-1"></i>Penceramah</span>
+                    <span id="modal-video-category" class="px-2.5 py-1 rounded-full bg-islamic-600/40 text-slate-300 font-medium uppercase text-[10px]">Kategori</span>
+                </div>
+                <p id="modal-video-desc" class="text-slate-300 leading-relaxed">Penerangan video ceramah...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LANGGANAN WHATSAPP VIP -->
+    <div id="pricing-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl max-w-md w-full border border-islamic-gold/40 relative shadow-2xl space-y-4">
+            <button onclick="closePricingModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-islamic-gold/20 rounded-2xl border border-islamic-gold/40 flex items-center justify-center mx-auto text-islamic-gold text-xl">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Daftar Langganan VIP</h3>
+                <p class="text-xs text-slate-300">Isi maklumat ringkas di bawah. Pengesahan & resit akan dikirim terus melalui WhatsApp Admin.</p>
+            </div>
+
+            <form onsubmit="handleSubscriptionWhatsApp(event)" class="space-y-3 text-left">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Nama Penuh</label>
+                    <input type="text" id="sub-name-input" required placeholder="Nama Lengkap Anda" class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-islamic-gold">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Nombor WhatsApp / Telefon</label>
+                    <input type="tel" id="sub-phone-input" required placeholder="0123456789" class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-islamic-gold">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Pilihan Pelan</label>
+                    <select id="sub-plan-select" class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-islamic-gold">
+                        <option value="Bulanan (RM 5.00/Bulan)">Pelan Bulanan - RM 5.00 / bulan</option>
+                        <option value="Tahunan (RM 50.00/Tahun)">Pelan Tahunan - RM 50.00 / tahun</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold rounded-xl shadow-lg hover:glow-emerald transition text-sm flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Hantar Pendaftaran ke WhatsApp</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL AUTH ADMIN (PASSWORD LOCK) -->
+    <div id="admin-auth-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl max-w-sm w-full border border-islamic-gold/40 relative shadow-2xl space-y-4 text-center">
+            <button onclick="closeAdminAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-12 h-12 bg-islamic-gold/20 rounded-2xl border border-islamic-gold/40 flex items-center justify-center mx-auto text-islamic-gold text-xl">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white">Log Masuk Admin</h3>
+            <p class="text-xs text-slate-300">Sila masukkan kata laluan untuk mengakses portal kawalan pengurusan.</p>
+
+            <form onsubmit="handleAdminAuthSubmit(event)" class="space-y-4">
+                <div>
+                    <input type="password" id="admin-pass-input" required placeholder="Kata Laluan Admin..." class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-islamic-gold text-center">
+                </div>
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-islamic-gold to-amber-500 text-islamic-900 font-bold rounded-xl shadow hover:glow-gold transition text-sm">
+                    Sahkan Kata Laluan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PORTAL PENGURUSAN ADMIN (MAIN PANEL) -->
+    <div id="admin-panel-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden">
+        <div class="glass-panel rounded-3xl max-w-5xl w-full border border-islamic-gold/50 overflow-hidden shadow-2xl flex flex-col max-h-[95vh]">
+            
+            <!-- Admin Header -->
+            <div class="p-4 sm:p-6 bg-islamic-800/90 border-b border-islamic-600/40 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-islamic-gold flex items-center justify-center text-islamic-900 font-bold text-lg">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold text-white">Portal Pengurusan Admin</h2>
+                        <p class="text-xs text-islamic-gold">Kawal Kandungan, Pengesahan ID Ahli & Tetapan Laman Web</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminPanel()" class="bg-islamic-700 hover:bg-slate-700 text-slate-300 p-2.5 rounded-xl text-sm transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Admin Nav Tabs -->
+            <div class="flex border-b border-islamic-600/30 bg-islamic-900/60 overflow-x-auto text-xs sm:text-sm font-semibold">
+                <button id="tab-btn-subscribers" onclick="switchAdminTab('subscribers')" class="px-5 py-3.5 text-islamic-gold border-b-2 border-islamic-gold whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-users"></i> Pendaftaran Pelanggan
+                </button>
+                <button id="tab-btn-titles" onclick="switchAdminTab('titles')" class="px-5 py-3.5 text-slate-400 border-b-2 border-transparent hover:text-white whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> Kemaskini Tajuk Web & Logo
+                </button>
+                <button id="tab-btn-videos" onclick="switchAdminTab('videos')" class="px-5 py-3.5 text-slate-400 border-b-2 border-transparent hover:text-white whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-video"></i> Kemaskini Video Ceramah
+                </button>
+                <button id="tab-btn-settings" onclick="switchAdminTab('settings')" class="px-5 py-3.5 text-slate-400 border-b-2 border-transparent hover:text-white whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-key"></i> Tukar Password Admin
+                </button>
+            </div>
+
+            <!-- Admin Body Tab Contents -->
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-grow bg-islamic-900/40 text-xs sm:text-sm">
+                
+                <!-- TAB 1: PENDAFTARAN PELANGGAN / ID AHLI -->
+                <div id="tab-content-subscribers" class="space-y-6">
+                    <div class="glass-panel p-5 rounded-2xl border border-islamic-gold/30 space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-user-plus text-islamic-gold"></i>
+                            Daftar / Aktifkan ID Ahli Baru
+                        </h3>
+                        <form onsubmit="handleCreateMemberSubmit(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-slate-300 text-xs mb-1">Nombor ID Ahli (Boleh Custom)</label>
+                                <input type="text" id="admin-new-id" required placeholder="Contoh: SIK-123456" class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white font-mono uppercase focus:outline-none focus:border-islamic-gold">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 text-xs mb-1">Tempoh Akses (Bulan)</label>
+                                <select id="admin-new-duration" class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                                    <option value="1">1 Bulan</option>
+                                    <option value="3">3 Bulan</option>
+                                    <option value="6">6 Bulan</option>
+                                    <option value="12" selected>12 Bulan (1 Tahun)</option>
+                                    <option value="24">24 Bulan (2 Tahun)</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button type="submit" class="w-full bg-gradient-to-r from-islamic-gold to-amber-500 text-islamic-900 font-bold py-2 rounded-xl hover:glow-gold transition shadow">
+                                    + Simpan & Aktifkan ID
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-white">Senarai ID Ahli VIP Berdaftar (<span id="member-count-badge">0</span>)</h3>
+                            <button onclick="renderAdminSubscribersList()" class="text-xs text-islamic-gold hover:underline"><i class="fa-solid fa-rotate-right mr-1"></i> Segarkan</button>
+                        </div>
+                        <div class="overflow-x-auto rounded-2xl border border-islamic-600/40">
+                            <table class="w-full text-left text-slate-300">
+                                <thead class="bg-islamic-800 text-slate-200 uppercase text-[11px] font-bold">
+                                    <tr>
+                                        <th class="p-3">Nombor ID Ahli</th>
+                                        <th class="p-3">Tarikh Mula</th>
+                                        <th class="p-3">Masa Berbaki</th>
+                                        <th class="p-3 text-right">Tindakan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-subscribers-tbody" class="divide-y divide-islamic-600/30 bg-islamic-900/60">
+                                    <!-- Dynamic list -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: KEMASKINI TAJUK WEB & LOGO (DENGAN FUNGSI GALERI/URL) -->
+                <div id="tab-content-titles" class="hidden space-y-6">
+                    
+                    <!-- SEKSYEN PENETAPAN LOGO LAMAN WEB -->
+                    <div class="glass-panel p-5 rounded-2xl border border-islamic-gold/40 space-y-4">
+                        <div class="flex items-center justify-between border-b border-islamic-600/30 pb-3">
+                            <h3 class="font-bold text-white text-base flex items-center gap-2">
+                                <i class="fa-solid fa-image text-islamic-gold"></i>
+                                Tetapan Logo Laman Web (Header & Footer)
+                            </h3>
+                            <span class="text-[11px] text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">Live Preview & Auto Save</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                            <!-- Input Muat Naik Fail Gambar Galeri & Link URL -->
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-slate-300 text-xs font-medium mb-1.5">1. Muat Naik Logo dari Galeri / Fail Telefon</label>
+                                    <input type="file" id="admin-logo-file-input" accept="image/*" onchange="handleLogoFileUpload(event)" class="w-full text-xs text-slate-400 bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 cursor-pointer file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-islamic-gold file:text-islamic-900 hover:file:bg-amber-400">
+                                    <p class="text-[10px] text-slate-400 mt-1">Sokong format PNG, JPG, WEBP, SVG. Gambar ditukar ke format automatik.</p>
+                                </div>
+
+                                <div class="relative flex py-1 items-center">
+                                    <div class="flex-grow border-t border-islamic-600/40"></div>
+                                    <span class="flex-shrink mx-3 text-[10px] text-slate-400 uppercase font-semibold">atau masukan URL</span>
+                                    <div class="flex-grow border-t border-islamic-600/40"></div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-slate-300 text-xs font-medium mb-1">2. Pautan Gambar Logo (URL Luaran)</label>
+                                    <div class="flex gap-2">
+                                        <input type="url" id="admin-logo-url-input" placeholder="https://example.com/logo.png" class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-islamic-gold">
+                                        <button type="button" onclick="handleLogoUrlSubmit()" class="px-4 py-2 bg-islamic-600 hover:bg-islamic-600/80 text-white font-semibold rounded-xl text-xs transition whitespace-nowrap">Guna URL</button>
+                                    </div>
+                                </div>
+
+                                <div class="pt-2">
+                                    <button type="button" onclick="resetToDefaultKaabaLogo()" class="w-full py-2 bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-900/80 font-semibold rounded-xl text-xs transition flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-rotate-left"></i>
+                                        <span>Buang Logo / Guna Format Asal (Ikon Kaaba)</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Paparan Preview Logo Admin -->
+                            <div class="p-4 bg-islamic-900/80 rounded-2xl border border-islamic-600/40 flex flex-col items-center justify-center space-y-3 min-h-[180px]">
+                                <span class="text-xs text-slate-400 font-semibold">Pra-Tonton Logo Semasa:</span>
+                                <div class="flex items-center space-x-4">
+                                    <div id="admin-preview-logo-box" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-islamic-gold to-amber-600 flex items-center justify-center glow-gold overflow-hidden border border-islamic-gold">
+                                        <i id="admin-preview-logo-icon" class="fa-solid fa-kaaba text-islamic-900 text-2xl"></i>
+                                        <img id="admin-preview-logo-img" src="" alt="Preview Logo" class="w-full h-full object-cover hidden">
+                                    </div>
+                                </div>
+                                <span id="admin-logo-status-lbl" class="text-[11px] text-slate-400 italic">Format Asal: Ikon Kaaba Vektor</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KEMASKINI TEKS & TAJUK WEBSITE -->
+                    <form onsubmit="handleSaveTitlesSubmit(event)" class="glass-panel p-5 rounded-2xl border border-islamic-gold/30 space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2 border-b border-islamic-600/30 pb-2">
+                            <i class="fa-solid fa-font text-islamic-gold"></i>
+                            Teks & Tajuk Platform
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-slate-300 text-xs mb-1">Tajuk Utama Web (Header & Tab Browser)</label>
+                                <input type="text" id="admin-title-input" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 text-xs mb-1">Sub-Tajuk Header / Slogan</label>
+                                <input type="text" id="admin-subtitle-input" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 text-xs mb-1">Slogan Hero Tagline</label>
+                                <input type="text" id="admin-herotag-input" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 text-xs mb-1">Tajuk Headline Hero Baris 1</label>
+                                <input type="text" id="admin-headline1-input" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-slate-300 text-xs mb-1">Tajuk Headline Hero Baris 2 (Warna Emas)</label>
+                                <input type="text" id="admin-headline2-input" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-slate-300 text-xs mb-1">Penerangan Hero Ringkas</label>
+                                <textarea id="admin-herodesc-input" rows="2" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl p-3 text-white focus:outline-none focus:border-islamic-gold"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-islamic-gold to-amber-500 text-islamic-900 font-bold rounded-xl shadow hover:glow-gold transition">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> Simpan Semua Teks & Tajuk Web
+                        </button>
+                    </form>
+                </div>
+
+                <!-- TAB 3: KEMASKINI VIDEO CERAMAH -->
+                <div id="tab-content-videos" class="hidden space-y-6">
+                    <div class="glass-panel p-5 rounded-2xl border border-islamic-gold/30 space-y-4">
+                        <h3 id="admin-video-form-title" class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-circle-plus text-islamic-gold"></i>
+                            Tambah Video Ceramah Baru
+                        </h3>
+                        <form onsubmit="handleSaveVideoSubmit(event)" class="space-y-3">
+                            <input type="hidden" id="admin-video-edit-id" value="">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-slate-300 text-xs mb-1">Tajuk Video Ceramah</label>
+                                    <input type="text" id="admin-v-title" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-300 text-xs mb-1">Nama Penceramah / Ustaz</label>
+                                    <input type="text" id="admin-v-speaker" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-300 text-xs mb-1">ID Video YouTube (Contoh: dQw4w9WgXcQ)</label>
+                                    <input type="text" id="admin-v-ytid" required placeholder="Hanya Kod ID YouTube selepas v=" class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-300 text-xs mb-1">Kategori Ceramah</label>
+                                    <select id="admin-v-category" class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                                        <option value="akidah">Akidah & Tauhid</option>
+                                        <option value="akhlak">Akhlak & Pembersihan Hati</option>
+                                        <option value="keluarga">Bimbingan Keluarga Muslim</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 text-xs mb-1">Penerangan Ringkas Video</label>
+                                <textarea id="admin-v-desc" rows="2" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl p-3 text-white focus:outline-none focus:border-islamic-gold"></textarea>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="submit" class="flex-grow py-2.5 bg-gradient-to-r from-islamic-gold to-amber-500 text-islamic-900 font-bold rounded-xl shadow hover:glow-gold transition">
+                                    Simpan Kandungan Video
+                                </button>
+                                <button type="button" onclick="resetVideoAdminForm()" class="px-4 py-2.5 bg-islamic-700 text-slate-300 rounded-xl hover:bg-slate-700 transition">
+                                    Batal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="font-bold text-white">Senarai Video Ceramah Portal (<span id="admin-video-count">0</span>)</h3>
+                        <div id="admin-videos-list" class="grid grid-cols-1 gap-3">
+                            <!-- Dynamic video admin list -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: TUKAR KATA LALUAN ADMIN -->
+                <div id="tab-content-settings" class="hidden space-y-6">
+                    <form onsubmit="handleChangeAdminPasswordSubmit(event)" class="glass-panel p-5 rounded-2xl border border-islamic-gold/30 max-w-md mx-auto space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2 border-b border-islamic-600/30 pb-2">
+                            <i class="fa-solid fa-lock text-islamic-gold"></i>
+                            Tukar Kata Laluan Admin
+                        </h3>
+                        <div>
+                            <label class="block text-slate-300 text-xs mb-1">Kata Laluan Semasa</label>
+                            <input type="password" id="admin-old-pass" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 text-xs mb-1">Kata Laluan Baru</label>
+                            <input type="password" id="admin-new-pass" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 text-xs mb-1">Pengesahan Kata Laluan Baru</label>
+                            <input type="password" id="admin-confirm-pass" required class="w-full bg-islamic-900 border border-islamic-600/60 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-islamic-gold">
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-islamic-gold to-amber-500 text-islamic-900 font-bold rounded-xl shadow hover:glow-gold transition">
+                            Kemaskini Kata Laluan Admin
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFIKASI TOAST CUSTOM -->
+    <div id="toast-notif" class="fixed bottom-5 right-5 bg-islamic-800 border border-islamic-gold text-white px-5 py-3 rounded-2xl shadow-2xl z-50 flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-islamic-gold text-lg"></i>
+        <span id="toast-msg" class="text-xs font-semibold">Mesej notifikasi...</span>
+    </div>
+
+    <!-- JAVASCRIPT & LOGIK SISTEM LENGKAP -->
+    <script>
+        // --- CONSTANTS & DATABASE INITIALIZATION (LOCALSTORAGE) ---
+        const WHATSAPP_HOTLINE = "60123456789"; // Tukar dengan nombor WhatsApp Admin anda
+
+        // Initial Data Video Ceramah Default
+        const INITIAL_VIDEOS = [
+            {
+                id: "v1",
+                title: "Pembersihan Hati & Penawar Jiwa Gelisah",
+                speaker: "Ustaz Abdul Somad, Lc., MA",
+                ytId: "P_y99709t-4",
+                category: "akhlak",
+                description: "Kupasan mendalam mengenai tazkiyatun nufus, amalan zikir harian, dan kaedah merawat keresahan jiwa mengikut kitab ulama silam."
+            },
+            {
+                id: "v2",
+                title: "Membina Syurga Di Rumah Tangga Kita",
+                speaker: "Ustaz Haziq Rahim",
+                ytId: "54238712390", // Contoh ID YouTube valid
+                category: "keluarga",
+                description: "Panduan praktikal mengukuhkan peranan suami isteri, komunikasi berhemah, serta mendidik anak-anak mencintai Al-Quran."
+            },
+            {
+                id: "v3",
+                title: "Memahami Hakikat Tauhid & Keagungan Allah",
+                speaker: "Ustazah Asma Harun",
+                ytId: "89123719238",
+                category: "akidah",
+                description: "Penjelasan ikhlas mengenai 20 sifat wajib bagi Allah, memantapkan keyakinan ketika menghadapi ujian kehidupan moden."
+            }
+        ];
+
+        // System Default Config State
+        const DEFAULT_CONFIG = {
+            docTitle: "Sayangi Islam Kita - Portal Ceramah Eksklusif",
+            headerTitle: "Sayangi Islam Kita",
+            headerSubtitle: "Koleksi Ceramah Eksklusif",
+            heroTagline: "Edisi Khas Rohani 2026 • Sayangi Islam Kita Sepenuh Hati",
+            heroHeadline1: "Perkukuh Iman,",
+            heroHeadline2: "Hayati Islam Sepenuh Hati",
+            heroDesc: "Terokai koleksi ceramah agama eksklusif daripada asatizah terkemuka. Kupasan mendalam tentang akidah, akhlak, sirah, dan pembersihan jiwa untuk membina keluarga & peribadi Muslim sejati.",
+            logoDataUrl: "" // Base64 or Image URL (Empty means Kaaba Icon default)
+        };
+
+        // State Global Variables
+        let stateVideos = [];
+        let stateSubscribers = {};
+        let stateConfig = { ...DEFAULT_CONFIG };
+        let adminPassword = "admin"; // Default password admin
+        let countdownTimerInterval = null;
+        let currentUserMemberId = null;
+
+        // --- ON LOAD INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDatabaseFromStorage();
+            renderAppUi();
+            checkAutoLoginSession();
+        });
+
+        function loadDatabaseFromStorage() {
+            // Load Videos
+            const storedVideos = localStorage.getItem('sik_videos_db');
+            if (storedVideos) {
+                stateVideos = JSON.parse(storedVideos);
+            } else {
+                stateVideos = [...INITIAL_VIDEOS];
+                saveVideosToStorage();
+            }
+
+            // Load Subscribers (Member IDs)
+            const storedSubscribers = localStorage.getItem('sik_subscribers_db');
+            if (storedSubscribers) {
+                stateSubscribers = JSON.parse(storedSubscribers);
+            } else {
+                // Pre-created demo account valid 30 days
+                const expiry = new Date();
+                expiry.setDate(expiry.getDate() + 30);
+                stateSubscribers = {
+                    "SIK-123456": {
+                        id: "SIK-123456",
+                        registeredAt: new Date().toISOString(),
+                        expiresAt: expiry.toISOString()
+                    }
+                };
+                saveSubscribersToStorage();
+            }
+
+            // Load Configuration & Titles
+            const storedConfig = localStorage.getItem('sik_config_db');
+            if (storedConfig) {
+                stateConfig = { ...DEFAULT_CONFIG, ...JSON.parse(storedConfig) };
+            }
+
+            // Load Admin Password
+            const storedPass = localStorage.getItem('sik_admin_pass');
+            if (storedPass) {
+                adminPassword = storedPass;
+            }
+        }
+
+        function saveVideosToStorage() {
+            localStorage.setItem('sik_videos_db', JSON.stringify(stateVideos));
+        }
+
+        function saveSubscribersToStorage() {
+            localStorage.setItem('sik_subscribers_db', JSON.stringify(stateSubscribers));
+        }
+
+        function saveConfigToStorage() {
+            localStorage.setItem('sik_config_db', JSON.stringify(stateConfig));
+        }
+
+        // --- RENDER APP & LOGO LIVE UPDATE ---
+        function renderAppUi() {
+            // Render Head & Titles
+            document.title = stateConfig.docTitle;
+            document.getElementById('ui-header-title').textContent = stateConfig.headerTitle;
+            document.getElementById('ui-header-subtitle').textContent = stateConfig.headerSubtitle;
+            document.getElementById('ui-hero-tagline').textContent = stateConfig.heroTagline;
+            document.getElementById('ui-hero-headline1').textContent = stateConfig.heroHeadline1;
+            document.getElementById('ui-hero-headline2').textContent = stateConfig.heroHeadline2;
+            document.getElementById('ui-hero-description').textContent = stateConfig.heroDesc;
+            document.getElementById('ui-footer-title').textContent = stateConfig.headerTitle + " Sepenuh Hati";
+
+            // Render Logo (Header, Footer & Admin Preview)
+            applyLogoState(stateConfig.logoDataUrl);
+
+            // Render Video Collection Grid
+            renderVideoGrid(stateVideos);
+        }
+
+        function applyLogoState(logoUrl) {
+            const headerIcon = document.getElementById('site-logo-icon');
+            const headerImg = document.getElementById('site-logo-img');
+            const footerIcon = document.getElementById('footer-logo-icon');
+            const footerImg = document.getElementById('footer-logo-img');
+
+            const adminIcon = document.getElementById('admin-preview-logo-icon');
+            const adminImg = document.getElementById('admin-preview-logo-img');
+            const adminStatus = document.getElementById('admin-logo-status-lbl');
+
+            if (logoUrl && logoUrl.trim() !== "") {
+                // Tampilkan Gambar Logo
+                if (headerIcon) headerIcon.classList.add('hidden');
+                if (headerImg) { headerImg.src = logoUrl; headerImg.classList.remove('hidden'); }
+
+                if (footerIcon) footerIcon.classList.add('hidden');
+                if (footerImg) { footerImg.src = logoUrl; footerImg.classList.remove('hidden'); }
+
+                if (adminIcon) adminIcon.classList.add('hidden');
+                if (adminImg) { adminImg.src = logoUrl; adminImg.classList.remove('hidden'); }
+                if (adminStatus) adminStatus.textContent = "Logo Tersimpan (Format Fail / URL Gambar Custom)";
+            } else {
+                // Guna Format Asal (Ikon Kaaba)
+                if (headerImg) headerImg.classList.add('hidden');
+                if (headerIcon) headerIcon.classList.remove('hidden');
+
+                if (footerImg) footerImg.classList.add('hidden');
+                if (footerIcon) footerIcon.classList.remove('hidden');
+
+                if (adminImg) adminImg.classList.add('hidden');
+                if (adminIcon) adminIcon.classList.remove('hidden');
+                if (adminStatus) adminStatus.textContent = "Format Asal: Ikon Kaaba Vektor";
+            }
+        }
+
+        // --- FUNGSI MUAT NAIK LOGO DARI GALERI TELEFON / FAIL & URL ---
+        function handleLogoFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Pastikan saiz fail bersesuaian (< 3MB)
+            if (file.size > 3 * 1024 * 1024) {
+                showToast("Saiz fail terlalu besar! Sila pilih gambar di bawah 3MB.", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const base64Image = e.target.result;
+                stateConfig.logoDataUrl = base64Image;
+                saveConfigToStorage();
+                applyLogoState(base64Image);
+                showToast("Logo daripada galeri berjaya dimuat naik & dikemaskini!", "success");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleLogoUrlSubmit() {
+            const urlInput = document.getElementById('admin-logo-url-input');
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                showToast("Sila masukkan pautan URL gambar logo yang sah.", "error");
+                return;
+            }
+
+            stateConfig.logoDataUrl = url;
+            saveConfigToStorage();
+            applyLogoState(url);
+            showToast("Pautan URL Logo berjaya dikemaskini!", "success");
+            urlInput.value = "";
+        }
+
+        function resetToDefaultKaabaLogo() {
+            stateConfig.logoDataUrl = "";
+            saveConfigToStorage();
+            applyLogoState("");
+            document.getElementById('admin-logo-file-input').value = "";
+            document.getElementById('admin-logo-url-input').value = "";
+            showToast("Logo ditetapkan semula kepada Format Asal (Ikon Kaaba).", "success");
+        }
+
+        // --- RENDER VIDEO GRID ---
+        function renderVideoGrid(videos) {
+            const grid = document.getElementById('video-grid');
+            grid.innerHTML = "";
+
+            if (videos.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-400 space-y-2">
+                        <i class="fa-solid fa-film text-4xl text-slate-600"></i>
+                        <p class="text-sm">Tiada ceramah dijumpai mengikut carian anda.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            videos.forEach(vid => {
+                const card = document.createElement('div');
+                card.className = "glass-panel rounded-2xl overflow-hidden border border-islamic-600/40 hover:border-islamic-gold/60 transition group flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="relative aspect-video bg-black overflow-hidden cursor-pointer" onclick="openVideoPlayer('${vid.id}')">
+                            <img src="https://img.youtube.com/vi/${vid.ytId}/hqdefault.jpg" alt="${vid.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100" onerror="this.src='https://placehold.co/600x400/0b132b/f59e0b?text=Ceramah+Islam'">
+                            <div class="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/10 transition">
+                                <div class="w-12 h-12 rounded-full bg-islamic-gold/90 text-islamic-900 flex items-center justify-center text-lg shadow-lg group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-play ml-1"></i>
+                                </div>
+                            </div>
+                            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-islamic-900/80 backdrop-blur text-[10px] font-bold text-islamic-gold uppercase tracking-wider border border-islamic-gold/30">
+                                ${vid.category}
+                            </span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <div class="flex items-center space-x-2 text-xs text-amber-400 font-medium">
+                                <i class="fa-solid fa-user-tie"></i>
+                                <span>${vid.speaker}</span>
+                            </div>
+                            <h3 class="font-bold text-white text-base line-clamp-2 hover:text-islamic-gold transition cursor-pointer" onclick="openVideoPlayer('${vid.id}')">${vid.title}</h3>
+                            <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">${vid.description}</p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 pt-2">
+                        <button onclick="openVideoPlayer('${vid.id}')" class="w-full py-2.5 rounded-xl bg-islamic-600/50 hover:bg-islamic-gold hover:text-islamic-900 text-slate-200 font-semibold text-xs transition flex items-center justify-center space-x-2 border border-islamic-600/60">
+                            <i class="fa-solid fa-circle-play"></i>
+                            <span>Tonton Sekarang</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- FILTER & SEARCH VIDEO ---
+        function filterCategory(category) {
+            const btns = document.querySelectorAll('.category-btn');
+            btns.forEach(btn => {
+                btn.className = "category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-islamic-900 text-slate-300 border border-islamic-600/50 whitespace-nowrap hover:border-islamic-gold transition";
+            });
+            event.target.className = "category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-islamic-gold text-islamic-900 whitespace-nowrap transition";
+
+            if (category === 'all') {
+                renderVideoGrid(stateVideos);
+            } else {
+                const filtered = stateVideos.filter(v => v.category === category);
+                renderVideoGrid(filtered);
+            }
+        }
+
+        function filterVideos() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = stateVideos.filter(v => 
+                v.title.toLowerCase().includes(query) || 
+                v.speaker.toLowerCase().includes(query) ||
+                v.category.toLowerCase().includes(query)
+            );
+            renderVideoGrid(filtered);
+        }
+
+        // --- LOG MASUK NOMBOR ID AHLI & COUNTDOWN ---
+        function handleMemberIdAuthSubmit(e) {
+            e.preventDefault();
+            const inputId = document.getElementById('hero-member-id-input').value.trim().toUpperCase();
+            processMemberLogin(inputId);
+        }
+
+        function handleMemberIdAuthSubmitModal(e) {
+            e.preventDefault();
+            const inputId = document.getElementById('modal-member-id-input').value.trim().toUpperCase();
+            processMemberLogin(inputId);
+            closePhoneAuthModal();
+        }
+
+        function processMemberLogin(memberId) {
+            if (!stateSubscribers[memberId]) {
+                showToast("Nombor ID Ahli tidak ditemui! Sila semak semula atau langgan VIP.", "error");
+                return;
+            }
+
+            const subscriber = stateSubscribers[memberId];
+            const now = new Date();
+            const expiresAt = new Date(subscriber.expiresAt);
+
+            if (now > expiresAt) {
+                showToast("Akses Nombor ID Ahli ini telah tamat tempoh. Sila perbaharui langganan.", "error");
+                return;
+            }
+
+            // Save Session
+            currentUserMemberId = memberId;
+            localStorage.setItem('sik_logged_member', memberId);
+
+            // Update UI
+            updateLoggedInUserUi(subscriber);
+            triggerFireworks();
+            showToast("Log Masuk Berjaya! Selamat datang Ahli VIP.", "success");
+        }
+
+        function checkAutoLoginSession() {
+            const savedMember = localStorage.getItem('sik_logged_member');
+            if (savedMember && stateSubscribers[savedMember]) {
+                const sub = stateSubscribers[savedMember];
+                if (new Date() < new Date(sub.expiresAt)) {
+                    currentUserMemberId = savedMember;
+                    updateLoggedInUserUi(sub);
+                } else {
+                    localStorage.removeItem('sik_logged_member');
+                }
+            }
+        }
+
+        function updateLoggedInUserUi(subscriber) {
+            document.getElementById('hero-phone-login-card').classList.add('hidden');
+            document.getElementById('hero-user-logged-banner').classList.remove('hidden');
+            document.getElementById('logged-id-display').textContent = subscriber.id;
+            
+            document.getElementById('status-text').textContent = "Ahli VIP (" + subscriber.id + ")";
+            document.getElementById('phone-login-btn-text').textContent = subscriber.id;
+
+            // Start Countdown Timer
+            startSubCountdown(subscriber.expiresAt);
+        }
+
+        function startSubCountdown(expiresAtStr) {
+            if (countdownTimerInterval) clearInterval(countdownTimerInterval);
+
+            const expDate = new Date(expiresAtStr).getTime();
+            const lblStatus = document.getElementById('user-sub-status-lbl');
+            const lblDisplay = document.getElementById('user-countdown-display');
+
+            lblStatus.textContent = "AKTIF & DILULUSKAN";
+            lblStatus.className = "text-emerald-400 uppercase font-bold";
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const diff = expDate - now;
+
+                if (diff <= 0) {
+                    clearInterval(countdownTimerInterval);
+                    lblDisplay.textContent = "Akses Tamat Tempoh";
+                    lblStatus.textContent = "TAMAT TEMPOH";
+                    lblStatus.className = "text-red-400 uppercase font-bold";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                lblDisplay.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+
+            updateTimer();
+            countdownTimerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function userLogout() {
+            if (countdownTimerInterval) clearInterval(countdownTimerInterval);
+            currentUserMemberId = null;
+            localStorage.removeItem('sik_logged_member');
+
+            document.getElementById('hero-phone-login-card').classList.remove('hidden');
+            document.getElementById('hero-user-logged-banner').classList.add('hidden');
+            document.getElementById('status-text').textContent = "Akaun Percuma";
+            document.getElementById('phone-login-btn-text').textContent = "Log Masuk Nombor ID";
+
+            showToast("Akaun berjaya dilog keluar.", "success");
+        }
+
+        // --- VIDEO PLAYER MODAL & YOUTUBE ---
+        function openVideoPlayer(videoId) {
+            const video = stateVideos.find(v => v.id === videoId);
+            if (!video) return;
+
+            document.getElementById('modal-video-title').textContent = video.title;
+            document.getElementById('modal-video-speaker').innerHTML = `<i class="fa-solid fa-user-tie mr-1"></i>${video.speaker}`;
+            document.getElementById('modal-video-category').textContent = video.category;
+            document.getElementById('modal-video-desc').textContent = video.description;
+
+            const iframe = document.getElementById('video-iframe');
+            iframe.src = `https://www.youtube.com/embed/${video.ytId}?autoplay=1&rel=0`;
+
+            document.getElementById('video-player-modal').classList.remove('hidden');
+        }
+
+        function closeVideoPlayerModal() {
+            document.getElementById('video-iframe').src = "";
+            document.getElementById('video-player-modal').classList.add('hidden');
+        }
+
+        // --- SUBSCRIPTION & WHATSAPP MODAL ---
+        function subscribePlan(planType, price) {
+            const select = document.getElementById('sub-plan-select');
+            if (planType === 'monthly') {
+                select.value = "Bulanan (RM 5.00/Bulan)";
+            } else {
+                select.value = "Tahunan (RM 50.00/Tahun)";
+            }
+            openPricingModal();
+        }
+
+        function openPricingModal() {
+            document.getElementById('pricing-modal').classList.remove('hidden');
+        }
+
+        function closePricingModal() {
+            document.getElementById('pricing-modal').classList.add('hidden');
+        }
+
+        function handleSubscriptionWhatsApp(e) {
+            e.preventDefault();
+            const name = document.getElementById('sub-name-input').value.trim();
+            const phone = document.getElementById('sub-phone-input').value.trim();
+            const plan = document.getElementById('sub-plan-select').value;
+
+            const msg = `Assalamualaikum Admin *Sayangi Islam Kita*,%0A%0ASaya ingin mendaftar Langganan VIP ceramah:%0A• *Nama*: ${name}%0A• *No Telefon*: ${phone}%0A• *Pelan Pilihan*: ${plan}%0A%0AMohon bantuan pengesahan & pengeluaran Nombor ID Ahli saya. Terima kasih!`;
+            
+            window.open(`https://wa.me/${WHATSAPP_HOTLINE}?text=${msg}`, '_blank');
+            closePricingModal();
+            showToast("Borang dihantar! Sila teruskan ke WhatsApp Admin.", "success");
+        }
+
+        // --- ADMIN AUTHENTICATION & PANEL ---
+        function openAdminAuthModal() {
+            document.getElementById('admin-auth-modal').classList.remove('hidden');
+        }
+
+        function closeAdminAuthModal() {
+            document.getElementById('admin-auth-modal').classList.add('hidden');
+            document.getElementById('admin-pass-input').value = "";
+        }
+
+        function handleAdminAuthSubmit(e) {
+            e.preventDefault();
+            const inputPass = document.getElementById('admin-pass-input').value;
+
+            if (inputPass === adminPassword) {
+                closeAdminAuthModal();
+                openAdminPanel();
+                showToast("Selamat datang ke Portal Pengurusan Admin!", "success");
+            } else {
+                showToast("Kata laluan Admin salah! Sila cuba lagi.", "error");
+            }
+        }
+
+        function openAdminPanel() {
+            // Populate titles inputs
+            document.getElementById('admin-title-input').value = stateConfig.headerTitle;
+            document.getElementById('admin-subtitle-input').value = stateConfig.headerSubtitle;
+            document.getElementById('admin-herotag-input').value = stateConfig.heroTagline;
+            document.getElementById('admin-headline1-input').value = stateConfig.heroHeadline1;
+            document.getElementById('admin-headline2-input').value = stateConfig.heroHeadline2;
+            document.getElementById('admin-herodesc-input').value = stateConfig.heroDesc;
+
+            // Render Sub-sections
+            renderAdminSubscribersList();
+            renderAdminVideosList();
+
+            document.getElementById('admin-panel-modal').classList.remove('hidden');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('admin-panel-modal').classList.add('hidden');
+        }
+
+        function switchAdminTab(tabName) {
+            const tabs = ['subscribers', 'titles', 'videos', 'settings'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-btn-${t}`);
+                const content = document.getElementById(`tab-content-${t}`);
+
+                if (t === tabName) {
+                    btn.className = "px-5 py-3.5 text-islamic-gold border-b-2 border-islamic-gold whitespace-nowrap flex items-center gap-2";
+                    content.classList.remove('hidden');
+                } else {
+                    btn.className = "px-5 py-3.5 text-slate-400 border-b-2 border-transparent hover:text-white whitespace-nowrap flex items-center gap-2";
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        // --- ADMIN TAB 1: SUBSCRIBERS / ID AHLI MANAGEMENT ---
+        function handleCreateMemberSubmit(e) {
+            e.preventDefault();
+            const idInput = document.getElementById('admin-new-id').value.trim().toUpperCase();
+            const months = parseInt(document.getElementById('admin-new-duration').value);
+
+            const now = new Date();
+            const expires = new Date();
+            expires.setMonth(expires.getMonth() + months);
+
+            stateSubscribers[idInput] = {
+                id: idInput,
+                registeredAt: now.toISOString(),
+                expiresAt: expires.toISOString()
+            };
+
+            saveSubscribersToStorage();
+            renderAdminSubscribersList();
+
+            document.getElementById('admin-new-id').value = "";
+            showToast(`ID Ahli ${idInput} berjaya diaktifkan selama ${months} bulan!`, "success");
+        }
+
+        function renderAdminSubscribersList() {
+            const tbody = document.getElementById('admin-subscribers-tbody');
+            const keys = Object.keys(stateSubscribers);
+            document.getElementById('member-count-badge').textContent = keys.length;
+
+            tbody.innerHTML = "";
+
+            if (keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Tiada ID Ahli berdaftar.</td></tr>`;
+                return;
+            }
+
+            keys.forEach(k => {
+                const sub = stateSubscribers[k];
+                const exp = new Date(sub.expiresAt);
+                const isExpired = new Date() > exp;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-islamic-800/40 transition";
+                tr.innerHTML = `
+                    <td class="p-3 font-mono font-bold text-islamic-gold">${sub.id}</td>
+                    <td class="p-3 text-xs text-slate-400">${new Date(sub.registeredAt).toLocaleDateString('ms-MY')}</td>
+                    <td class="p-3 text-xs">
+                        ${isExpired ? `<span class="text-red-400 font-bold">Tamat Tempoh</span>` : `<span class="text-emerald-400 font-medium">${exp.toLocaleDateString('ms-MY')}</span>`}
+                    </td>
+                    <td class="p-3 text-right">
+                        <button onclick="deleteSubscriber('${sub.id}')" class="text-red-400 hover:text-red-300 p-1">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deleteSubscriber(id) {
+            if (confirm(`Adakah anda pasti untuk memadamkan ID Ahli ${id}?`)) {
+                delete stateSubscribers[id];
+                saveSubscribersToStorage();
+                renderAdminSubscribersList();
+                showToast(`ID Ahli ${id} dipadamkan.`, "success");
+            }
+        }
+
+        // --- ADMIN TAB 2: SAVE TITLES & CONFIG ---
+        function handleSaveTitlesSubmit(e) {
+            e.preventDefault();
+            stateConfig.headerTitle = document.getElementById('admin-title-input').value.trim();
+            stateConfig.headerSubtitle = document.getElementById('admin-subtitle-input').value.trim();
+            stateConfig.heroTagline = document.getElementById('admin-herotag-input').value.trim();
+            stateConfig.heroHeadline1 = document.getElementById('admin-headline1-input').value.trim();
+            stateConfig.heroHeadline2 = document.getElementById('admin-headline2-input').value.trim();
+            stateConfig.heroDesc = document.getElementById('admin-herodesc-input').value.trim();
+            stateConfig.docTitle = stateConfig.headerTitle + " - Portal Ceramah Eksklusif";
+
+            saveConfigToStorage();
+            renderAppUi();
+            showToast("Semua teks & tajuk web berjaya dikemaskini!", "success");
+        }
+
+        // --- ADMIN TAB 3: VIDEOS MANAGEMENT ---
+        function handleSaveVideoSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('admin-video-edit-id').value;
+            const title = document.getElementById('admin-v-title').value.trim();
+            const speaker = document.getElementById('admin-v-speaker').value.trim();
+            const ytId = document.getElementById('admin-v-ytid').value.trim();
+            const category = document.getElementById('admin-v-category').value;
+            const desc = document.getElementById('admin-v-desc').value.trim();
+
+            if (editId) {
+                // Update Existing
+                const idx = stateVideos.findIndex(v => v.id === editId);
+                if (idx !== -1) {
+                    stateVideos[idx] = { id: editId, title, speaker, ytId, category, description: desc };
+                    showToast("Kandungan video berjaya dikemaskini!", "success");
+                }
+            } else {
+                // Add New
+                const newVid = {
+                    id: "v_" + Date.now(),
+                    title, speaker, ytId, category, description: desc
+                };
+                stateVideos.unshift(newVid);
+                showToast("Video ceramah baru berjaya ditambah!", "success");
+            }
+
+            saveVideosToStorage();
+            renderVideoGrid(stateVideos);
+            renderAdminVideosList();
+            resetVideoAdminForm();
+        }
+
+        function renderAdminVideosList() {
+            const list = document.getElementById('admin-videos-list');
+            document.getElementById('admin-video-count').textContent = stateVideos.length;
+            list.innerHTML = "";
+
+            stateVideos.forEach(v => {
+                const item = document.createElement('div');
+                item.className = "p-3 bg-islamic-800/80 rounded-xl border border-islamic-600/30 flex items-center justify-between gap-3";
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3 truncate">
+                        <img src="https://img.youtube.com/vi/${v.ytId}/default.jpg" class="w-12 h-9 object-cover rounded-lg flex-shrink-0" onerror="this.src='https://placehold.co/100x100/0b132b/f59e0b?text=Video'">
+                        <div class="truncate">
+                            <p class="font-bold text-white text-xs truncate">${v.title}</p>
+                            <p class="text-[10px] text-amber-400">${v.speaker} • <span class="uppercase">${v.category}</span></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 flex-shrink-0">
+                        <button onclick="editVideoAdmin('${v.id}')" class="px-2.5 py-1 bg-islamic-600 hover:bg-islamic-gold hover:text-islamic-900 text-slate-200 rounded-lg text-xs font-semibold transition">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteVideoAdmin('${v.id}')" class="px-2.5 py-1 bg-red-950/80 hover:bg-red-600 text-red-300 hover:text-white rounded-lg text-xs font-semibold transition">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function editVideoAdmin(id) {
+            const v = stateVideos.find(x => x.id === id);
+            if (!v) return;
+
+            document.getElementById('admin-video-edit-id').value = v.id;
+            document.getElementById('admin-v-title').value = v.title;
+            document.getElementById('admin-v-speaker').value = v.speaker;
+            document.getElementById('admin-v-ytid').value = v.ytId;
+            document.getElementById('admin-v-category').value = v.category;
+            document.getElementById('admin-v-desc').value = v.description;
+
+            document.getElementById('admin-video-form-title').innerHTML = `<i class="fa-solid fa-pen-to-square text-islamic-gold"></i> Edit Video Ceramah`;
+        }
+
+        function resetVideoAdminForm() {
+            document.getElementById('admin-video-edit-id').value = "";
+            document.getElementById('admin-v-title').value = "";
+            document.getElementById('admin-v-speaker').value = "";
+            document.getElementById('admin-v-ytid').value = "";
+            document.getElementById('admin-v-desc').value = "";
+            document.getElementById('admin-video-form-title').innerHTML = `<i class="fa-solid fa-circle-plus text-islamic-gold"></i> Tambah Video Ceramah Baru`;
+        }
+
+        function deleteVideoAdmin(id) {
+            if (confirm("Adakah anda pasti untuk memadamkan video ceramah ini?")) {
+                stateVideos = stateVideos.filter(v => v.id !== id);
+                saveVideosToStorage();
+                renderVideoGrid(stateVideos);
+                renderAdminVideosList();
+                showToast("Video berjaya dipadamkan.", "success");
+            }
+        }
+
+        // --- ADMIN TAB 4: CHANGE PASSWORD ---
+        function handleChangeAdminPasswordSubmit(e) {
+            e.preventDefault();
+            const oldPass = document.getElementById('admin-old-pass').value;
+            const newPass = document.getElementById('admin-new-pass').value;
+            const confirmPass = document.getElementById('admin-confirm-pass').value;
+
+            if (oldPass !== adminPassword) {
+                showToast("Kata laluan semasa tidak betul!", "error");
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                showToast("Pengesahan kata laluan baru tidak sepadan!", "error");
+                return;
+            }
+
+            adminPassword = newPass;
+            localStorage.setItem('sik_admin_pass', newPass);
+
+            document.getElementById('admin-old-pass').value = "";
+            document.getElementById('admin-new-pass').value = "";
+            document.getElementById('admin-confirm-pass').value = "";
+
+            showToast("Kata laluan Admin berjaya ditukar!", "success");
+        }
+
+        // --- UTILITY FUNCTIONS (TOAST, FAQ, SCROLL, FIREWORKS) ---
+        function openPhoneAuthModal() {
+            document.getElementById('phone-auth-modal').classList.remove('hidden');
+        }
+
+        function closePhoneAuthModal() {
+            document.getElementById('phone-auth-modal').classList.add('hidden');
+            document.getElementById('modal-member-id-input').value = "";
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleFaq(element) {
+            const p = element.nextElementSibling;
+            const icon = element.querySelector('i');
+            p.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function scrollToSection(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast-notif');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.textContent = msg;
+
+            if (type === 'error') {
+                toast.className = "fixed bottom-5 right-5 bg-red-950 border border-red-500 text-white px-5 py-3 rounded-2xl shadow-2xl z-50 flex items-center space-x-3 transition-all duration-300 pointer-events-none";
+                toastIcon.className = "fa-solid fa-circle-exclamation text-red-400 text-lg";
+            } else {
+                toast.className = "fixed bottom-5 right-5 bg-islamic-800 border border-islamic-gold text-white px-5 py-3 rounded-2xl shadow-2xl z-50 flex items-center space-x-3 transition-all duration-300 pointer-events-none";
+                toastIcon.className = "fa-solid fa-circle-check text-islamic-gold text-lg";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+
+        // --- KESAN FIREWORKS (PENGESAHAN KEROANIAN / TAHNIAH) ---
+        function triggerFireworks() {
+            const canvas = document.getElementById('fireworks-canvas');
+            canvas.classList.remove('hidden');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            const colors = ['#F59E0B', '#059669', '#FBBF24', '#FFFFFF', '#10B981'];
+
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: (Math.random() - 0.5) * 12,
+                    size: Math.random() * 4 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1,
+                    decay: Math.random() * 0.02 + 0.01
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+
+                particles.forEach(p => {
+                    if (p.alpha > 0) {
+                        alive = true;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.alpha -= p.decay;
+
+                        ctx.save();
+                        ctx.globalAlpha = Math.max(0, p.alpha);
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fillStyle = p.color;
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                });
+
+                if (alive) {
+                    requestAnimationFrame(animate);
+                } else {
+                    canvas.classList.add('hidden');
+                }
+            }
+
+            animate();
+        }
+    </script>
+</body>
+</html>
